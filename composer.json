@@ -1,0 +1,19 @@
+{
+    "name": "common/logger",
+    "autoload": {
+        "psr-4": {
+            "Common\\Logger\\": "src"
+        }
+    },
+    "prefer-stable": true,
+    "repositories": [
+        {"type": "composer", "url": "http://toran.moefantasy.com/repo/private/"},
+        {"type": "composer", "url": "http://satis.moefantasy.com/"},
+        {"packagist": false}
+    ],
+    "require": {
+        "psr/log": "~1.0",
+        "monolog/monolog": "~1.13",
+        "common/dependency": ">=1.0"
+    }
+}
