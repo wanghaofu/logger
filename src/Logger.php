@@ -12,10 +12,12 @@ class Logger extends AbstractLogger
 
     public static function _makeLogger()
     {
+
         $factory = LoggerFactory::instance();
 
         $logger = new MonologLogger('main');
 
+//        this is for  //packageConfig get the key value from config key is handlers
         foreach ($factory->packageConfig(LoggerFactory::CFG_HANDLERS) as $handler) {
             switch ($handler['type']) {
                 case 'mongo':

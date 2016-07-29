@@ -4,6 +4,10 @@ use Common\Dependency\Dependency;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
+/**
+ * Class LoggerFactory
+ * @package Common\Logger
+ */
 class LoggerFactory extends Dependency
 {
     const MONGO_CLIENT = 'mongo';
@@ -14,6 +18,7 @@ class LoggerFactory extends Dependency
     protected function __construct()
     {
         parent::__construct();
+        // init and import looger object
         self::import([
             self::LOGGERS => function () {
                 return [Logger::_makeLogger()];
