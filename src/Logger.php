@@ -36,9 +36,37 @@ class Logger extends AbstractLogger
                         @mkdir($dir, 0777, true);
                     }
 
-                    $logger->pushHandler(
-                        new RotatingFileHandler($handler['path'], $handler['limit'], $handler['level'])
+                    // new format
+
+
+                    //file
+                    $rotatingFile = new RotatingFileHandler(
+                        $handler['path'],
+                        $handler['limit'],
+                        $handler['level'],
+                        true,
+                        null,
+                        true//use locking = true : 使用flock阻止并发写
                     );
+
+                    //format set
+                    if(1) {
+                        $dateFormat = "Y-m-d H:m:i";
+                        $output = "[%datetime%] %level_name% : %message% %context% \n";
+                        $formatter = new FileLineFormatter( null, null, true, true );
+                        $rotatingFile->setFormatter( $formatter );
+
+                        $logger->pushHandler( $rotatingFile );
+                    }
+
+
+
+
+                    // old format
+
+//                    $logger->pushHandler(
+//                        new RotatingFileHandler($handler['path'], $handler['limit'], $handler['level'])
+//                    );
                     break;
                 default:
                     throw new \Exception('config error');
@@ -53,6 +81,7 @@ class Logger extends AbstractLogger
         $result = array();
         $traceline = '#%s %4$s(%5$s) @ %2$s:%3$s';
         $key = 0;
+        array_shift($trace);
         foreach ($trace as $key => $stackPoint) {
 
             if (isset($stackPoint['args'])) {
