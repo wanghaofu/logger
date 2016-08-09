@@ -1,9 +1,12 @@
 <?php namespace Common\Logger;
 
 use Common\Dependency\Traits\SingletonTrait;
+use Monolog\Handler\SyslogHandler;
 use Monolog\Handler\MongoDBHandler;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger as MonologLogger;
+use Monolog\Formatter\LineFormatter;
+
 use Psr\Log\AbstractLogger;
 
 class Logger extends AbstractLogger
@@ -20,6 +23,12 @@ class Logger extends AbstractLogger
 //        this is for  //packageConfig get the key value from config key is handlers
         foreach ($factory->packageConfig(LoggerFactory::CFG_HANDLERS) as $handler) {
             switch ($handler['type']) {
+                case 'syslog':
+                    $syslog = new SyslogHandler($handler['ident'],$handler['facility'], $handler['level']);
+                    $formatter = new LineFormatter("%channel%.%level_name%: %message% %extra%");
+                    $syslog->setFormatter($formatter);
+                    $logger->pushHandler($syslog);
+                    break;
                 case 'mongo':
                     $mongoHandler = new MongoDBHandler(
                         $factory->mongo(),
@@ -35,10 +44,7 @@ class Logger extends AbstractLogger
                     if (!is_dir($dir)) {
                         @mkdir($dir, 0777, true);
                     }
-
                     // new format
-
-
                     //file
                     $rotatingFile = new RotatingFileHandler(
                         $handler['path'],
@@ -50,16 +56,16 @@ class Logger extends AbstractLogger
                     );
 
                     //format set
-                    if(1) {
+                    if(0) {
                         $dateFormat = "Y-m-d H:m:i";
                         $output = "[%datetime%] %level_name% : %message% %context% \n";
                         $formatter = new FileLineFormatter( null, null, true, true );
                         $rotatingFile->setFormatter( $formatter );
 
-                        $logger->pushHandler( $rotatingFile );
+
                     }
 
-
+                    $logger->pushHandler( $rotatingFile );
 
 
                     // old format
