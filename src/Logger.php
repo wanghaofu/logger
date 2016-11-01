@@ -15,7 +15,6 @@ class Logger extends AbstractLogger
 
     public static function _makeLogger()
     {
-
         $factory = LoggerFactory::instance();
 
         $logger = new MonologLogger('main');
@@ -61,15 +60,10 @@ class Logger extends AbstractLogger
                         $output = "[%datetime%] %level_name% : %message% %context% \n";
                         $formatter = new FileLineFormatter( null, null, true, true );
                         $rotatingFile->setFormatter( $formatter );
-
-
                     }
 
                     $logger->pushHandler( $rotatingFile );
-
-
                     // old format
-
 //                    $logger->pushHandler(
 //                        new RotatingFileHandler($handler['path'], $handler['limit'], $handler['level'])
 //                    );
